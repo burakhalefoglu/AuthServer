@@ -9,12 +9,12 @@ namespace SharedLibrary.DTOs
     public class ResponseDto<T> where T : class
     {
         public T Data { get; private set; }
-        public string StatuseCode { get; private set; }
+        public int StatuseCode { get; private set; }
         public bool IsSuccess { get; private set; }
         public ErrorDto Error { get; private set; }
 
 
-        public static ResponseDto<T> Success(T data, string statuseCode)
+        public static ResponseDto<T> Success(T data, int statuseCode)
         {
             return new ResponseDto<T>
             {
@@ -24,7 +24,7 @@ namespace SharedLibrary.DTOs
             };
         }
 
-        public static ResponseDto<T> Success(string statuseCode)
+        public static ResponseDto<T> Success(int statuseCode)
         {
             return new ResponseDto<T>
             {
@@ -35,7 +35,7 @@ namespace SharedLibrary.DTOs
             };
         }
 
-        public static ResponseDto<T> Fail(ErrorDto errorDto, string statuseCode)
+        public static ResponseDto<T> Fail(ErrorDto errorDto, int statuseCode)
         {
 
             return new ResponseDto<T>
@@ -48,7 +48,7 @@ namespace SharedLibrary.DTOs
 
         }
 
-        public static ResponseDto<T> Fail(string errorMessage, string statuseCode, bool isShow)
+        public static ResponseDto<T> Fail(string errorMessage, int statuseCode, bool isShow)
         {
             ErrorDto errorDto = new ErrorDto(errorMessage, isShow);
 
