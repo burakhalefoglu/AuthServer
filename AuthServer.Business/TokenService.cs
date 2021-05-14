@@ -5,6 +5,7 @@ using AuthServer.Core.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SharedLibrary;
 using SharedLibrary.Configurations;
 using System;
 using System.Collections.Generic;
@@ -45,17 +46,16 @@ namespace AuthServer.Business
 
         }
 
+
         private IEnumerable<Claim> GetClaimsClient(Client client)
         {
-            var clientlist = new List<Claim>()
-            {
-              new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-              new Claim(JwtRegisteredClaimNames.Sub,client.Id.ToString())
+            var claims = new List<Claim>();
+            claims.AddRange(client.Audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
 
-            };
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, client.Id.ToString()));
 
-            clientlist.AddRange(client.Audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
-            return clientlist;
+            return claims;
         }
 
         private string CreateRefreshToken()
@@ -102,7 +102,7 @@ namespace AuthServer.Business
             var accessTokenExpiration = DateTime.Now.AddMinutes(customTokenOptions.AccessTokenExpiration);
             var securityKey = SignService.GetSymmetricKey(customTokenOptions.SecurityKey);
 
-            SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.Aes256CbcHmacSha512);
+            SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
             JwtSecurityToken securityToken = new JwtSecurityToken(
                 issuer: customTokenOptions.Issuer,

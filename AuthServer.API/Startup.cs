@@ -22,6 +22,7 @@ using AuthServer.DataAccess;
 using AuthServer.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SharedLibrary.Extensions;
 
 namespace AuthServer.API
 {
@@ -61,6 +62,11 @@ namespace AuthServer.API
 
 
             services.Configure<CustomTokenOption>(Configuration.GetSection("TokenOption"));
+            var tokenOptions = Configuration.GetSection("TokenOption").Get<CustomTokenOption>();
+
+            services.Configure<List<Client>>(Configuration.GetSection("Clients"));
+
+            services.AddCustomTokenAuth(tokenOptions);
             services.Configure<Client>(Configuration.GetSection("Clients"));
             services.AddControllers();
             services.AddSwaggerGen(c =>

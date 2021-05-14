@@ -22,7 +22,7 @@ namespace AuthServer.API.Controllers
             _authenticationService = authenticationService;
         }
 
-        //api/auth/
+
         [HttpPost]
         public async Task<IActionResult> CreateToken(LoginDto loginDto)
         {

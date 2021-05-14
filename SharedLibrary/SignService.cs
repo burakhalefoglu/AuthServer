@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuthServer.Business
+namespace SharedLibrary
 {
-    static class SignService
+    public static class SignService
     {
         public static SecurityKey GetSymmetricKey(string securityKey)
         {
