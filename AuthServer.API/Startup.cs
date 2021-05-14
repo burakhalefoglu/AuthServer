@@ -12,6 +12,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SharedLibrary.Configurations;
+using AuthServer.Core.Configuration;
+using AuthServer.Core.Service;
+using AuthServer.Business;
+using AuthServer.Core.DataAccess;
+using AuthServer.DataAccess.Repositories;
+using AuthServer.Core.UnitOfWork;
+using AuthServer.DataAccess;
+using AuthServer.Core.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.API
 {
@@ -27,7 +37,31 @@ namespace AuthServer.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAuthService, AuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped(typeof(IEntityRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IService<,>), typeof(ServiceGeneric<,>));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly("AuthServer.DataAccess");
+                });
+            });
+
+            services.AddIdentity<User, IdentityRole>(Opt =>
+            {
+                Opt.User.RequireUniqueEmail = true;
+                Opt.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+
             services.Configure<CustomTokenOption>(Configuration.GetSection("TokenOption"));
+            services.Configure<Client>(Configuration.GetSection("Clients"));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +82,7 @@ namespace AuthServer.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

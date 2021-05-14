@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace AuthServer.Core.DataAccess
 {
-    public interface IEntityRepository<TEntity> where TEntity : class
+    public interface IEntityRepository<T> where T : class
     {
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<TEntity> GetByIdAsync(int id);
-        Task AddAsync(TEntity entity);
-        IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
-        void Delete(TEntity entity);
-        TEntity Update(TEntity entity);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        Task AddAsync(T entity);
+        IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+        void Delete(T entity);
+        T Update(T entity);
 
 
 

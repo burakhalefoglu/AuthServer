@@ -11,10 +11,9 @@ namespace AuthServer.Core.Service
     public interface IAuthService
     {
         Task<ResponseDto<TokenDto>> CreateTokenAsync(LoginDto loginDto);
-        Task<ResponseDto<TokenDto>> CreateTokenbyRefreshTokenAsync(string refreshToken);
-        Task<ResponseDto<NoDataContent>> revokeRefreshtoken(string refreshToken);
-        Task<ResponseDto<ClientTokenDto>> revokeRefreshtoken(ClientDto clientDto);
+        Task<ResponseDto<TokenDto>> CreateTokenByRefreshToken(string refreshToken);
+        Task<ResponseDto<NoDataContent>> RevokeRefreshToken(string refreshToken);
 
-
+        ResponseDto<ClientTokenDto> CreateTokenByClient(ClientDto clientLoginDto);
     }
 }

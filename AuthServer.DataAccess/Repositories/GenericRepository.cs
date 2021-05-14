@@ -3,7 +3,6 @@ using AuthServer.Core.DataAccess;
 using AuthServer.Core.Entities;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -11,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace AuthServer.DataAccess.Repositories
 {
-    public class GenericRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class, IEntity, new()
+    public class GenericRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
     {
-        private readonly DbContext _context;
+        private readonly AppDbContext _context;
         private readonly Microsoft.EntityFrameworkCore.DbSet<TEntity> _dbSet;
 
-        public GenericRepository(DbContext context)
+        public GenericRepository(AppDbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
@@ -52,7 +51,7 @@ namespace AuthServer.DataAccess.Repositories
 
         public TEntity Update(TEntity entity)
         {
-            _context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.Entry(entity).State = EntityState.Modified;
 
             return entity;
         }
