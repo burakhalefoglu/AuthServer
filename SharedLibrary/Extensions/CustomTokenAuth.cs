@@ -24,7 +24,6 @@ namespace SharedLibrary.Extensions
                     ValidIssuer = tokenOptions.Issuer,
                     ValidAudience = tokenOptions.Audience[0],
                     IssuerSigningKey = SignService.GetSymmetricKey(tokenOptions.SecurityKey),
-
                     ValidateIssuerSigningKey = true,
                     ValidateAudience = true,
                     ValidateIssuer = true,
